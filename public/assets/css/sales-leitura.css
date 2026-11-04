@@ -1,0 +1,45 @@
+/* Estilos exclusivos da tela de Sales Leitura. */
+#sales-sync-form .app-notice { margin: 22px 0; }
+#sales-sync-form .btn-primary { margin-top: 2px; }
+#sales-sync-form .card { max-width: 720px; }
+
+#sales-result {
+  margin-top: 16px;
+  padding: 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+#sales-result.success {
+  border-left: 4px solid var(--fc-success);
+  background: #f0faf4;
+  color: #155724;
+}
+#sales-result.error {
+  border-left: 4px solid var(--fc-danger);
+  background: #fef4f4;
+  color: #721c24;
+}
+
+#sales-cardSummary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+#sales-cardSummary .summary-item {
+  padding: 12px;
+  background: #f7f9fc;
+  border-radius: 8px;
+  text-align: center;
+}
+#sales-cardSummary .summary-item .label {
+  font-size: 12px;
+  color: var(--fc-muted);
+  margin-bottom: 4px;
+}
+#sales-cardSummary .summary-item .value {
+  font-size: 22px;
+  font-weight: bold;
+  color: var(--fc-brand-dark);
+}

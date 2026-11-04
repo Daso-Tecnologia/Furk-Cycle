@@ -1,0 +1,65 @@
+/* Ajustes específicos da tela de Sincronização Consolidada Contínua.
+   Reutiliza o shell (app.css). Apenas refinamentos locais. */
+
+.app-grid-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.toolbar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+#progress-body {
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+.progress-track {
+  height: 10px;
+  border-radius: 6px;
+  background: #e6ecf5;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0;
+  background: var(--fc-brand, #2f6bd8);
+  transition: width 0.4s ease;
+}
+
+.table-scroll {
+  overflow-x: auto;
+}
+
+.app-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.app-table th,
+.app-table td {
+  text-align: left;
+  padding: 8px 10px;
+  border-bottom: 1px solid #e6ecf5;
+  white-space: nowrap;
+}
+
+.app-table thead th {
+  color: var(--fc-muted, #6b7280);
+  font-weight: 600;
+}
+
+.app-table tr.log-erro td {
+  background: #fdecec;
+}
+
+@media (max-width: 900px) {
+  .app-grid-3 {
+    grid-template-columns: 1fr;
+  }
+}

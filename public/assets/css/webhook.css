@@ -1,0 +1,47 @@
+/* Webhook — ajustes exclusivos da tela */
+
+.status-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.status-row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 12px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.status-row dt {
+  color: var(--fc-muted);
+}
+
+.status-row dd {
+  margin: 0;
+  font-weight: 600;
+  word-break: break-all;
+}
+
+.badge-registered {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 13px;
+  background: #e6f7e6;
+  color: #1a7f37;
+}
+
+.badge-unregistered {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 13px;
+  background: #fde8e8;
+  color: #b91c1c;
+}

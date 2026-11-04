@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Furk Cycle | Rebooking</title>
+  <link rel="stylesheet" href="assets/css/app.css?v=20261103b">
+  <link rel="stylesheet" href="assets/css/rebookings.css?v=20261103b">
+</head>
+<body>
+  <nav class="topbar">
+    <div class="topbar-brand">
+      <img src="assets/img/logo.svg" alt="Logotipo" class="topbar-logo">
+      <span>Furk Cycle</span>
+    </div>
+    <div class="topbar-nav">
+      <a href="./" data-nav-link>Painel</a>
+      <a href="creditos-elegiveis.html" data-nav-link>Créditos elegíveis</a>
+      <div class="nav-group">
+        <button class="nav-toggle" type="button" aria-haspopup="true" aria-expanded="false">Status Dinâmicos</button>
+        <div class="nav-submenu">
+          <a href="consulta-localizador.html" data-nav-link>Consulta localizador</a>
+          <a href="status-dinamicos-leitura.html" data-nav-link>Status Dinâmicos Leitura</a>
+          <a href="rotina-continua.html" data-nav-link>Rotina Contínua</a>
+        </div>
+      </div>
+      <a href="reembolsos-elegiveis.html" data-nav-link>Reembolsos elegíveis</a>
+      <div class="nav-group">
+        <button class="nav-toggle" type="button" aria-haspopup="true" aria-expanded="false">Sales</button>
+        <div class="nav-submenu">
+          <a href="sales-leitura.html" data-nav-link>Sales Leitura</a>
+          <a href="sales-rotina-continua.html" data-nav-link>Rotina Contínua</a>
+        </div>
+      </div>
+      <div class="nav-group">
+        <button class="nav-toggle" type="button" aria-haspopup="true" aria-expanded="false">Sincronização</button>
+        <div class="nav-submenu">
+          <a href="sync-consolidada.html" data-nav-link>Consolidada</a>
+          <a href="sync-continua.html" data-nav-link>Consolidada Contínua</a>
+          <a href="sync-rotina.html" data-nav-link>Consolidada Contínua Recursiva</a>
+        </div>
+      </div>
+      <a href="rebookings.html" data-nav-link class="active">Rebooking</a>
+      <a href="webhook.html" data-nav-link>Webhook</a>
+      <a href="configuracoes.html" data-nav-link>Configurações</a>
+      <a href="auditoria.html" data-nav-link>Auditoria</a>
+      <a href="usuarios.html" data-nav-link>Usuários</a>
+      <a href="guia.html" data-nav-link>Guia</a>
+    </div>
+    <div class="topbar-user">
+      <span data-user-name>Usuário autenticado</span>
+      <button class="btn btn-small btn-outline" type="button" data-action="logout">Sair</button>
+    </div>
+  </nav>
+
+  <main class="container">
+    <div class="page-header">
+      <h2>Rebooking</h2>
+    </div>
+    <p class="muted">Candidatos lidos do GATE mais os registros já enviados (tabela de controle) para Rebooking na Furk.Cycle.</p>
+    <p class="muted" id="rb-regras" hidden></p>
+    <div class="rb-legend">
+      <span class="rb-legend-item"><span class="rb-status-dot sent"></span>Enviado / controlado</span>
+      <span class="rb-legend-item"><span class="rb-status-dot pending"></span>Não enviado</span>
+    </div>
+
+    <section class="toolbar">
+      <input type="text" id="rb-search" placeholder="Buscar por nota, localizador, bilhete, passageiro, companhia…" aria-label="Buscar">
+      <select id="rb-estado" aria-label="Estado de control">
+        <option value="todos">Todos os estados</option>
+        <option value="no_enviado">Não enviado (azul)</option>
+        <option value="enviado">Enviado / controlado (verde)</option>
+      </select>
+      <select id="rb-size" aria-label="Tamanho de página">
+        <option value="25">25 por página</option>
+        <option value="50" selected>50 por página</option>
+        <option value="100">100 por página</option>
+        <option value="200">200 por página</option>
+      </select>
+      <button class="btn btn-primary" id="rb-search-button" type="button">Buscar</button>
+      <button class="btn" id="rb-reload" type="button">Recarregar</button>
+    </section>
+
+    <section class="panel">
+      <div class="grid-actions">
+        <span id="rb-count" class="muted">0 registros</span>
+        <div class="grid-actions-buttons">
+          <button class="btn btn-small" id="rb-check-all" type="button">Marcar todos</button>
+          <button class="btn btn-small" id="rb-uncheck-all" type="button">Desmarcar todos</button>
+          <button class="btn btn-primary" id="rb-preview" type="button">Prévia selecionados</button>
+          <button class="btn btn-warning" id="rb-send" type="button">Enviar a Rebooking</button>
+          <button class="btn" id="rb-export" type="button">Exportar XLSX</button>
+          <button class="btn" id="rb-control" type="button">Ver controle</button>
+          <button class="btn" id="rb-gate" type="button">Ver tabela GATE</button>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table class="table rb-table">
+          <thead>
+            <tr>
+              <th class="col-check"><input type="checkbox" id="rb-select-page" aria-label="Selecionar página"></th>
+              <th>Nota</th>
+              <th>Localizador</th>
+              <th>Bilhete</th>
+              <th>Passageiro</th>
+              <th>Companhia</th>
+              <th>Emissão</th>
+              <th>Trecho</th>
+              <th>Total</th>
+              <th>Enviado</th>
+              <th>Furk / Processamento</th>
+              <th>Enviado em</th>
+              <th>ID Furk</th>
+            </tr>
+          </thead>
+          <tbody id="rb-body">
+            <tr><td colspan="13" class="muted">Carregando registros…</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="pagination" id="rb-pagination"></div>
+    </section>
+
+    <section id="rb-result" class="panel" aria-live="polite" hidden></section>
+  </main>
+
+  <div class="modal-backdrop" id="control-modal" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="control-modal-title">
+      <div class="modal-header">
+        <h3 id="control-modal-title">Controle de Rebooking</h3>
+        <div class="modal-header-actions">
+          <button class="btn btn-small" id="control-toggle-search" type="button">Buscar</button>
+          <button class="modal-close" id="control-modal-close" type="button" aria-label="Fechar">×</button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="toolbar" id="control-search-bar" hidden>
+          <input type="text" id="control-search" placeholder="Buscar por localizador, bilhete, ID Furk, estado…">
+          <button class="btn btn-primary" id="control-search-button" type="button">Buscar</button>
+        </div>
+        <div class="table-wrap">
+          <table class="table control-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nota</th>
+                <th>Localizador</th>
+                <th>Bilhete</th>
+                <th>Companhia</th>
+                <th>ID Furk</th>
+                <th>Estado Furk</th>
+                <th>HTTP</th>
+                <th>Processamento</th>
+                <th>Emissão Furk</th>
+                <th>Atualizado</th>
+                <th>Erro</th>
+              </tr>
+            </thead>
+            <tbody id="control-body">
+              <tr><td colspan="12" class="muted">Carregando…</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="pagination" id="control-pagination"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="gate-modal" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="gate-modal-title">
+      <div class="modal-header">
+        <h3 id="gate-modal-title">Tabela Rebooking do GATE</h3>
+        <div class="modal-header-actions">
+          <button class="btn btn-small" id="gate-toggle-search" type="button">Buscar</button>
+          <button class="modal-close" id="gate-modal-close" type="button" aria-label="Fechar">×</button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="toolbar" id="gate-search-bar" hidden>
+          <input type="text" id="gate-search" placeholder="Buscar por nota, localizador, bilhete, passageiro, companhia…">
+          <button class="btn btn-primary" id="gate-search-button" type="button">Buscar</button>
+        </div>
+        <div class="table-wrap">
+          <table class="table control-table">
+            <thead>
+              <tr>
+                <th>Nota</th>
+                <th>Localizador</th>
+                <th>Bilhete</th>
+                <th>Passageiro</th>
+                <th>Companhia</th>
+                <th>Emissão</th>
+                <th>Trecho</th>
+                <th>Produto</th>
+                <th>Tarifa</th>
+                <th>Total</th>
+                <th>Faturado</th>
+                <th>Fil. Agt</th>
+              </tr>
+            </thead>
+            <tbody id="gate-body">
+              <tr><td colspan="12" class="muted">Carregando…</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="pagination" id="gate-pagination"></div>
+        <p class="muted">Fonte direta: <code>dbo.Rebooking</code> (GATE). As notas enviadas ainda aparecem aqui porque a vista do GATE as contém; o estado de envio é definido pela tabela de controle.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="confirm-modal" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="confirm-modal-title">
+      <div class="modal-header">
+        <h3 id="confirm-modal-title">Confirmar envio a Rebooking</h3>
+        <button class="modal-close" id="confirm-modal-close" aria-label="Fechar">×</button>
+      </div>
+      <div class="modal-body">
+        <p id="confirm-modal-text"></p>
+        <input type="text" id="confirm-modal-input" placeholder="Digite ENVIAR REBOOKING" autocomplete="off">
+        <div class="toolbar">
+          <button class="btn btn-primary" id="confirm-modal-ok" type="button">Confirmar</button>
+          <button class="btn" id="confirm-modal-cancel" type="button">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/js/api.js?v=20261103b"></script>
+  <script src="assets/js/main.js?v=20261103b"></script>
+  <script src="assets/js/app.js?v=20261103b"></script>
+  <script src="assets/js/rebookings.js?v=20261103b"></script>
+</body>
+</html>

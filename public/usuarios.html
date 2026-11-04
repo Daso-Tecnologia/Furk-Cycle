@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Furk Cycle | Usuários</title>
+  <link rel="stylesheet" href="assets/css/app.css?v=20261103b">
+  <link rel="stylesheet" href="assets/css/usuarios.css?v=20261103b">
+</head>
+<body>
+  <nav class="topbar">
+    <div class="topbar-brand">
+      <img src="assets/img/logo.svg" alt="Logotipo" class="topbar-logo">
+      <span>Furk Cycle</span>
+    </div>
+    <div class="topbar-nav">
+      <a href="./" data-nav-link>Painel</a>
+      <a href="creditos-elegiveis.html" data-nav-link>Créditos elegíveis</a>
+      <div class="nav-group">
+        <button class="nav-toggle" type="button" aria-haspopup="true" aria-expanded="false">Status Dinâmicos</button>
+        <div class="nav-submenu">
+          <a href="consulta-localizador.html" data-nav-link>Consulta localizador</a>
+          <a href="status-dinamicos-leitura.html" data-nav-link>Status Dinâmicos Leitura</a>
+          <a href="rotina-continua.html" data-nav-link>Rotina Contínua</a>
+        </div>
+      </div>
+      <a href="reembolsos-elegiveis.html" data-nav-link>Reembolsos elegíveis</a>
+      <div class="nav-group">
+        <button class="nav-toggle" type="button" aria-haspopup="true" aria-expanded="false">Sales</button>
+        <div class="nav-submenu">
+          <a href="sales-leitura.html" data-nav-link>Sales Leitura</a>
+          <a href="sales-rotina-continua.html" data-nav-link>Rotina Contínua</a>
+        </div>
+      </div>
+      <div class="nav-group">
+        <button class="nav-toggle" type="button" aria-haspopup="true" aria-expanded="false">Sincronização</button>
+        <div class="nav-submenu">
+          <a href="sync-consolidada.html" data-nav-link>Consolidada</a>
+          <a href="sync-continua.html" data-nav-link>Consolidada Contínua</a>
+          <a href="sync-rotina.html" data-nav-link>Consolidada Contínua Recursiva</a>
+        </div>
+      </div>
+      <a href="rebookings.html" data-nav-link>Rebooking</a>
+      <a href="webhook.html" data-nav-link>Webhook</a>
+      <a href="configuracoes.html" data-nav-link>Configurações</a>
+      <a href="auditoria.html" data-nav-link>Auditoria</a>
+      <a href="usuarios.html" data-nav-link class="active">Usuários</a>
+      <a href="guia.html" data-nav-link>Guia</a>
+    </div>
+    <div class="topbar-user">
+      <span data-user-name>Usuário autenticado</span>
+      <button class="btn btn-small btn-outline" type="button" data-action="logout">Sair</button>
+    </div>
+  </nav>
+
+  <main class="container">
+    <div class="page-header">
+      <h1>Usuários</h1>
+    </div>
+    <p class="muted">Gerenciamento dos usuários com acesso ao sistema.</p>
+
+    <section class="panel">
+      <div class="toolbar">
+        <button class="btn btn-primary" type="button" data-action="new-user">Novo usuário</button>
+        <button class="btn btn-outline" type="button" data-action="refresh">Recarregar</button>
+      </div>
+
+      <table class="table" id="usersTable">
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>E-mail</th>
+            <th>Perfil</th>
+            <th>Status</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody id="usersBody">
+          <tr><td colspan="5" class="muted">Carregando…</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <div class="modal" id="userModal" hidden>
+    <div class="modal-box">
+      <h3 id="userModalTitle">Novo usuário</h3>
+      <div class="form-group">
+        <label for="uName">Nome</label>
+        <input type="text" id="uName" autocomplete="off" required>
+      </div>
+      <div class="form-group">
+        <label for="uEmail">E-mail</label>
+        <input type="email" id="uEmail" autocomplete="off" required>
+      </div>
+      <div class="form-group">
+        <label for="uRole">Perfil</label>
+        <select id="uRole">
+          <option value="ADMIN">ADMIN</option>
+          <option value="SUPERVISOR">SUPERVISOR</option>
+        </select>
+      </div>
+      <div class="form-group" id="uPasswordGroup">
+        <label for="uPassword">Senha (mínimo 8)</label>
+        <input type="password" id="uPassword" autocomplete="new-password">
+      </div>
+      <div class="form-group" id="uActiveGroup">
+        <label>
+          <input type="checkbox" id="uActive" checked>
+          Usuário ativo
+        </label>
+      </div>
+      <div class="form-error" id="userError" hidden></div>
+      <div class="modal-actions">
+        <button class="btn btn-outline" type="button" data-action="close-user">Cancelar</button>
+        <button class="btn btn-primary" type="button" data-action="save-user">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="passwordModal" hidden>
+    <div class="modal-box">
+      <h3>Redefinir senha</h3>
+      <p class="muted" id="passwordUser"></p>
+      <div class="form-group">
+        <label for="pPassword">Nova senha (mínimo 8)</label>
+        <input type="password" id="pPassword" autocomplete="new-password">
+      </div>
+      <div class="form-error" id="passwordError" hidden></div>
+      <div class="modal-actions">
+        <button class="btn btn-outline" type="button" data-action="close-password">Cancelar</button>
+        <button class="btn btn-primary" type="button" data-action="save-password">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/js/api.js?v=20261103b"></script>
+  <script src="assets/js/main.js?v=20261103b"></script>
+  <script src="assets/js/app.js?v=20261103b"></script>
+  <script src="assets/js/usuarios.js?v=20261103b"></script>
+</body>
+</html>

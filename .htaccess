@@ -1,0 +1,35 @@
+# Furki Cycle — Proteção da raíz (capa de defesa)
+# Impede o acesso direto a pastas internas e arquivos sensíveis.
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Impedir acesso direto a pastas internas (código, migrações, docs, dependências)
+    RewriteRule ^(src|database|docs|vendor|storage|worker|aws|env_em_aws|novas_features|dump)/ - [F,L]
+
+    # Permitir acesso direto a arquivos existentes (css, js, etc.)
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # Tudo o resto vai para o front controller em public/
+    RewriteRule ^ /public/index.php [L]
+</IfModule>
+
+# Segurança: impedir acesso a arquivos sensíveis
+<FilesMatch "^(\.env|\.env\.example|composer\.json|composer\.lock|.*\.log)$">
+    Require all denied
+</FilesMatch>
+
+# Segurança: bloquear arquivos de teste/diagnóstico que podem expor credenciais
+<FilesMatch "^(test_|diagnostico_).*\.php$">
+    Require all denied
+</FilesMatch>
+
+# Impedir listagem de diretórios
+Options -Indexes
+
+# Bloquear arquivos ocultos (incluindo .env, .git, .htaccess)
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>

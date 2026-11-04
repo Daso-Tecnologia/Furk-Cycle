@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Furk Cycle | Guia do Usuário</title>
+  <link rel="stylesheet" href="assets/css/app.css?v=20261103b">
+  <link rel="stylesheet" href="assets/css/guia.css?v=20261103b">
+</head>
+<body>
+  <nav class="topbar">
+    <div class="topbar-brand">
+      <img src="assets/img/logo.svg" alt="Logotipo" class="topbar-logo">
+      <span>Furk Cycle</span>
+    </div>
+    <div class="topbar-nav">
+      <a href="./" data-nav-link>Painel</a>
+      <a href="creditos-elegiveis.html" data-nav-link>Créditos elegíveis</a>
+      <div class="nav-group">
+        <button class="nav-toggle" type="button" aria-haspopup="true" aria-expanded="false">Status Dinâmicos</button>
+        <div class="nav-submenu">
+          <a href="consulta-localizador.html" data-nav-link>Consulta localizador</a>
+          <a href="status-dinamicos-leitura.html" data-nav-link>Status Dinâmicos Leitura</a>
+          <a href="rotina-continua.html" data-nav-link>Rotina Contínua</a>
+        </div>
+      </div>
+      <a href="reembolsos-elegiveis.html" data-nav-link>Reembolsos elegíveis</a>
+      <div class="nav-group">
+        <button class="nav-toggle" type="button" aria-haspopup="true" aria-expanded="false">Sales</button>
+        <div class="nav-submenu">
+          <a href="sales-leitura.html" data-nav-link>Sales Leitura</a>
+          <a href="sales-rotina-continua.html" data-nav-link>Rotina Contínua</a>
+        </div>
+      </div>
+      <div class="nav-group">
+        <button class="nav-toggle" type="button" aria-haspopup="true" aria-expanded="false">Sincronização</button>
+        <div class="nav-submenu">
+          <a href="sync-consolidada.html" data-nav-link>Consolidada</a>
+          <a href="sync-continua.html" data-nav-link>Consolidada Contínua</a>
+          <a href="sync-rotina.html" data-nav-link>Consolidada Contínua Recursiva</a>
+        </div>
+      </div>
+      <a href="rebookings.html" data-nav-link>Rebooking</a>
+      <a href="webhook.html" data-nav-link>Webhook</a>
+      <a href="configuracoes.html" data-nav-link>Configurações</a>
+      <a href="auditoria.html" data-nav-link>Auditoria</a>
+      <a href="usuarios.html" data-nav-link>Usuários</a>
+      <a href="guia.html" data-nav-link class="active">Guia</a>
+    </div>
+    <div class="topbar-user">
+      <span data-user-name>Usuário autenticado</span>
+      <button class="btn btn-small btn-outline" type="button" data-action="logout">Sair</button>
+    </div>
+  </nav>
+
+  <header class="guide-hero">
+    <div class="guide-hero-inner">
+      <span class="guide-eyebrow">Documentação</span>
+      <h1>Guia do Usuário</h1>
+      <p>Entenda o que é o <strong>Furk Cycle</strong>, como ele funciona e o que faz cada opção do menu.</p>
+    </div>
+  </header>
+
+  <main class="guide">
+    <nav class="guide-toc" aria-label="Índice">
+      <a href="#oque" data-toc-link>O que é o sistema</a>
+      <a href="#comofunciona" data-toc-link>Como funciona</a>
+      <a href="#menu" data-toc-link>Opções do menu</a>
+      <a href="#conceitos" data-toc-link>Conceitos-chave</a>
+      <a href="#dicas" data-toc-link>Boas práticas</a>
+    </nav>
+
+    <div class="guide-content">
+      <section id="oque" class="guide-section">
+        <h2>O que é o Furk Cycle</h2>
+        <p>O <strong>Furk Cycle</strong> é uma aplicação web que integra o operacional de bilhetes ao
+          ciclo de vida da <strong>Furk.Cycle</strong>: acompanha <strong>créditos</strong>,
+          <strong>reembolsos</strong>, <strong>vendas</strong>, <strong>status de bilhetes</strong>,
+          <strong>rebookings</strong> e os <strong>retornos por webhook</strong>.</p>
+        <p>A aplicação <strong>não substitui</strong> o operacional: ela lê os dados da Furk (e do
+          GATE no caso do Rebooking), grava em tabelas locais de controle e mantém espelhada a
+          tabela de BI <code>bi_insight</code>.</p>
+        <div class="guide-callout">
+          <span class="guide-eyebrow">Em uma frase</span>
+          Um <em>hub</em> que importa o ciclo da Furk para o seu banco, consolida o BI e apoia a operação de Rebooking.
+        </div>
+      </section>
+
+      <section id="comofunciona" class="guide-section">
+        <h2>Como funciona</h2>
+        <div class="guide-flow">
+          <div class="guide-flow-step"><span>1</span><div><strong>Leitura externa</strong><br>o sistema consulta a Furk (e o GATE) em um período.</div></div>
+          <div class="guide-flow-step"><span>2</span><div><strong>Escrita interna</strong><br>os dados são gravados nas tabelas locais (<code>furkapi_*</code>) por upsert.</div></div>
+          <div class="guide-flow-step"><span>3</span><div><strong>Espelho do BI</strong><br>ganchos automáticos atualizam a <code>bi_insight</code> (banco de BI).</div></div>
+          <div class="guide-flow-step"><span>4</span><div><strong>Rotinas</strong><br>rotinas contínuas mantêm os dados atualizados (janela D-1).</div></div>
+        </div>
+        <p class="guide-note">A Furk <strong>não contempla o dia corrente</strong>: a atualização mais recente é o
+          dia anterior (<strong>D-1</strong>). Por isso as janelas de leitura terminam em ontem.</p>
+      </section>
+
+      <section id="menu" class="guide-section">
+        <h2>Opções do menu</h2>
+        <p class="guide-note">Descrição de cada item do menu, agrupados por área.</p>
+
+        <p class="guide-group">Operação</p>
+
+        <article class="guide-card">
+          <h3>Painel</h3>
+          <p>Página inicial do sistema (abre a tela de <strong>Créditos Elegíveis</strong>).</p>
+        </article>
+
+        <article class="guide-card">
+          <h3>Créditos elegíveis</h3>
+          <p>Importa da Furk os <strong>créditos elegíveis</strong> de um período e grava em
+            <code>furkapi_creditos_elegiveis</code>. Atualiza a <code>bi_insight</code> (campo
+            <code>Valor_estimado_credito</code>).</p>
+        </article>
+
+        <article class="guide-card is-parent">
+          <h3>Status Dinâmicos ▾</h3>
+          <p>Grupo de leitura de bilhetes e localizadores.</p>
+          <ul class="guide-sub">
+            <li><strong>Consulta localizador</strong> — verifica se um PNR (localizador) existe na base da Furk em um período.</li>
+            <li><strong>Status Dinâmicos Leitura</strong> — importa bilhetes + segmentos do período (<code>furkapi_bilhetes_aereos</code> / <code>_segmentos</code>).</li>
+            <li><strong>Rotina Contínua</strong> — rotina automática (janela D-1) que importa os bilhetes sozinha.</li>
+          </ul>
+        </article>
+
+        <article class="guide-card">
+          <h3>Reembolsos elegíveis</h3>
+          <p>Importa os bilhetes <strong>reembolsáveis</strong> (<code>furkapi_refunds_elegiveis</code>), com
+            enriquecimento do crédito do bilhete. Atualiza o <code>Valor_estimado_reembolso</code> no BI.</p>
+        </article>
+
+        <article class="guide-card is-parent">
+          <h3>Sales ▾</h3>
+          <p>Grupo de vendas.</p>
+          <ul class="guide-sub">
+            <li><strong>Sales Leitura</strong> — importa as vendas do período (<code>furkapi_sales</code>).</li>
+            <li><strong>Rotina Contínua</strong> — rotina automática de vendas (D-1).</li>
+          </ul>
+        </article>
+
+        <p class="guide-group">Sincronização</p>
+
+        <article class="guide-card is-parent">
+          <h3>Sincronização ▾</h3>
+          <p>Importação consolidada das 4 tabelas de dados.</p>
+          <ul class="guide-sub">
+            <li><strong>Consolidada</strong> — importa Sales, Créditos, Reembolsos e Status Dinâmicos para um período, em segundo plano.</li>
+            <li><strong>Consolidada Contínua</strong> — varredura de <strong>períodos longos</strong> (ex.: um ano) em <strong>blocos</strong>, com ponto de retomada (cursor) e log de evolução.</li>
+            <li><strong>Consolidada Contínua Recursiva</strong> — rotina contínua e automática (<strong>loop indefinido</strong>) que importa as 4 tabelas, com janela deslizante baseada em D-1. A <strong>data base é sempre a data atual</strong> (não pode ser alterada); configure a <strong>frequência em horas</strong> (1 a 5) e o <strong>recuo em dias</strong> (1 a 5). Atualiza a <code>bi_insight</code> automaticamente.</li>
+          </ul>
+        </article>
+
+        <p class="guide-group">Rebooking e Webhook</p>
+
+        <article class="guide-card">
+          <h3>Rebooking</h3>
+          <p>Grid do <strong>GATE</strong> (com lupa e filtros) integrada ao controle de envios. Permite
+            <strong>prévia</strong>, <strong>envio à Furk</strong> (com confirmação) e <strong>export XLSX</strong>;
+            mostra em verde o que já foi enviado.</p>
+        </article>
+
+        <article class="guide-card">
+          <h3>Webhook</h3>
+          <p>Monitor do <strong>cadastro do webhook</strong> na Furk e dos <strong>retornos de status</strong>
+            dos Rebookings enviados.</p>
+        </article>
+
+        <p class="guide-group">Administração</p>
+
+        <article class="guide-card">
+          <h3>Configurações</h3>
+          <p>Preferências do sistema (em desenvolvimento).</p>
+        </article>
+
+        <article class="guide-card">
+          <h3>Auditoria</h3>
+          <p>Trilha de operações (em desenvolvimento).</p>
+        </article>
+
+        <article class="guide-card">
+          <h3>Usuários</h3>
+          <p>Cadastro e gestão de usuários e de seus perfis de acesso: listar,
+            criar, editar e redefinir senha.</p>
+        </article>
+
+        <article class="guide-card">
+          <h3>Guia</h3>
+          <p>Esta página: o manual do usuário com a explicação de cada opção.</p>
+        </article>
+      </section>
+
+      <section id="conceitos" class="guide-section">
+        <h2>Conceitos-chave</h2>
+        <dl class="guide-glossary">
+          <div><dt>Furk.Cycle</dt><dd>Plataforma integrada (Sales, Créditos, Reembolsos, Status Dinâmicos, Rebooking) consumida via API.</dd></div>
+          <div><dt>GATE</dt><dd>Origem operacional dos dados de emissão (base MSSQL) usada pelo Rebooking.</dd></div>
+          <div><dt>Localizador (PNR)</dt><dd>Código que identifica a reserva.</dd></div>
+          <div><dt>tkt_num</dt><dd>Identificador de bilhete usado como chave na <code>bi_insight</code>.</dd></div>
+          <div><dt>bi_insight</dt><dd>Tabela de BI (banco <code>exemplo_bi_insight</code>) mantida espelhada a partir das tabelas locais.</dd></div>
+          <div><dt>D-1</dt><dd>A Furk disponibiliza até o dia anterior; o dia corrente nunca entra na leitura.</dd></div>
+          <div><dt>Ganchos (hooks)</dt><dd>Ao importar, o sistema atualiza a <code>bi_insight</code> automaticamente.</dd></div>
+        </dl>
+      </section>
+
+      <section id="dicas" class="guide-section">
+        <h2>Boas práticas</h2>
+        <ul class="guide-list">
+          <li>Para <strong>povoar períodos longos</strong>, use <strong>Sincronização → Consolidada Contínua</strong> (blocos de 5 dias). Pode fechar o navegador — o processamento continua no servidor.</li>
+          <li>Para <strong>manter as 4 tabelas sempre atualizadas</strong>, use <strong>Sincronização → Consolidada Contínua Recursiva</strong>: a data base fica fixa na data atual; configure a frequência (em horas) e o recuo (em dias). A rotina roda sozinha em loop e só para quando você interromper.</li>
+          <li>Nas <strong>rotinas contínuas</strong>, ajuste a frequência e a janela para o volume do dia; a leitura respeita a regra D-1.</li>
+          <li>No <strong>Rebooking</strong>, use sempre a <strong>prévia</strong> antes do envio real — o envio é uma operação financeira.</li>
+          <li>Toda importação <strong>não apaga</strong> dados fora do período tratado; reexecuções são idempotentes.</li>
+        </ul>
+      </section>
+    </div>
+  </main>
+
+  <script src="assets/js/api.js?v=20261103b"></script>
+  <script src="assets/js/main.js?v=20261103b"></script>
+  <script src="assets/js/app.js?v=20261103b"></script>
+  <script src="assets/js/guia.js?v=20261103b"></script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+{
+  "name": "furki-cycle/creditos-elegiveis",
+  "description": "Módulo PHP 8.2 para sincronizar créditos elegíveis da Furk.Cycle",
+  "type": "project",
+  "require": {
+    "php": "^8.1",
+    "firebase/php-jwt": "^7.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "FurkiCycle\\": "src/"
+    }
+  },
+  "config": {
+    "sort-packages": true
+  }
+}
