@@ -11,7 +11,7 @@ use RuntimeException;
  * Imutável; criada a partir de entrada validada (tela de Configurações) ou dos valores padrão.
  *
  * Os valores PADRÃO reproduzem exatamente os filtros da view original:
- *   data_nota >= hoje - 10 dias · cliente 055763 · fornecedor AD · produto 02 · forma de pagamento B · cadastro INTERFTMS.
+ *   data_nota >= hoje - 10 dias · cliente 000001 · fornecedor XA · produto 02 · forma de pagamento B · cadastro ORIGEM01.
  * (O filtro "cancelada <> 1" é fixo e não configurável.)
  */
 final class RebookingGateFilter
@@ -46,7 +46,7 @@ final class RebookingGateFilter
 
     public static function defaults(): self
     {
-        return new self(10, ['055763'], ['AD'], ['02'], ['B'], ['INTERFTMS']);
+        return new self(10, ['000001'], ['XA'], ['02'], ['B'], ['ORIGEM01']);
     }
 
     /**

@@ -96,7 +96,7 @@ check('contagem da pagina = total', $pagina['total'] === count($pagina['rows']))
 
 // Janela maior devolve pelo menos as mesmas notas (filtro de dias efetivo).
 $maior = new RebookingGateRepository(new Env($root . '/.env'), RebookingGateFilter::fromInput([
-    'diasJanela' => 30, 'clientes' => '055763', 'fornecedores' => 'AD', 'produtos' => '02', 'formasNota' => 'B', 'cadastros' => 'INTERFTMS',
+    'diasJanela' => 30, 'clientes' => '000001', 'fornecedores' => 'XA', 'produtos' => '02', 'formasNota' => 'B', 'cadastros' => 'ORIGEM01',
 ]));
 $totalMaior = $maior->count('');
 check('janela de 30 dias >= janela de 10 dias', $totalMaior >= $pagina['total'], "{$totalMaior} vs {$pagina['total']}");

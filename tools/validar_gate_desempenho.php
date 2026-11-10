@@ -45,7 +45,7 @@ try {
     exit(2);
 }
 
-$onde = "WHERE v.data_nota >= DATEADD(DAY, -10, GETDATE()) AND v.cancel <> '1' AND v.produto = '02' AND f.cod_for = 'AD' AND v.forma_nota = 'B' AND v.cod_cad = 'INTERFTMS' AND v.cod_cli = '055763'";
+$onde = "WHERE v.data_nota >= DATEADD(DAY, -10, GETDATE()) AND v.cancel <> '1' AND v.produto = '02' AND f.cod_for = 'XA' AND v.forma_nota = 'B' AND v.cod_cad = 'ORIGEM01' AND v.cod_cli = '000001'";
 $amostra = $pdo->query("SELECT TOP 1 v.fil_agt, v.nota, v.num_file FROM wg_ven v WITH (NOLOCK) LEFT JOIN wgfor f WITH (NOLOCK) ON v.cod_prest = f.cod_for {$onde}")->fetch();
 if (!is_array($amostra)) {
     echo "Sem notas na janela atual do GATE para testar.\n";

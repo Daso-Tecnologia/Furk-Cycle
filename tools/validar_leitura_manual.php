@@ -121,7 +121,7 @@ $pagina = function (string $ini, string $fim, int $page, int $size): array {
     $dia = sprintf('2026-10-%02d', $page);
     $itens = [];
     foreach ([1, 2] as $n) {
-        $itens[] = ['ticketID' => ['airlineCode' => 'AD', 'ticketNumber' => sprintf('TST%02d%02d', $page, $n), 'issueDate' => $dia], 'totalValue' => 10];
+        $itens[] = ['ticketID' => ['airlineCode' => 'XA', 'ticketNumber' => sprintf('TST%02d%02d', $page, $n), 'issueDate' => $dia], 'totalValue' => 10];
     }
 
     return ['data' => $itens, 'totalPages' => 4];

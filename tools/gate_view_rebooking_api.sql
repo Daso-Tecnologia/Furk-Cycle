@@ -50,10 +50,10 @@ LEFT JOIN wgcli c WITH (NOLOCK) ON v.cod_cli = c.cod_cli AND v.fil_cli = c.fil_a
 WHERE v.data_nota >= DATEADD(DAY, -10, GETDATE())
   AND v.cancel <> '1'
   AND v.produto = '02'
-  AND f.cod_for = 'AD'
+  AND f.cod_for = 'XA'
   AND v.forma_nota = 'B'
-  AND v.cod_cad = 'INTERFTMS'
-  AND v.cod_cli = '055763';
+  AND v.cod_cad = 'ORIGEM01'
+  AND v.cod_cli = '000001';
 GO
 
 /*
