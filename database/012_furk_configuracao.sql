@@ -4,7 +4,7 @@
 -- InnoDB é obrigatório (alterações gravam valor + histórico na mesma transação).
 --
 -- Chaves usadas hoje (prefixo rebooking.gate.): dias_janela, clientes, fornecedores, produtos, formas_nota, cadastros.
--- Listas são gravadas separadas por vírgula (ex.: "AD,G3").
+-- Listas são gravadas separadas por vírgula (ex.: "XA,G3").
 
 CREATE TABLE IF NOT EXISTS furk_configuracao (
     chave VARCHAR(64) NOT NULL,

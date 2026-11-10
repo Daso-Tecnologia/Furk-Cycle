@@ -38,22 +38,22 @@ function rejeita(array $entrada): bool
     return false;
 }
 
-$base = ['diasJanela' => 10, 'clientes' => '055763', 'fornecedores' => 'AD', 'produtos' => '02', 'formasNota' => 'B', 'cadastros' => 'INTERFTMS'];
+$base = ['diasJanela' => 10, 'clientes' => '000001', 'fornecedores' => 'XA', 'produtos' => '02', 'formasNota' => 'B', 'cadastros' => 'ORIGEM01'];
 
 echo "== Parte A: filtro (offline) ==\n";
 check('padrões = filtros originais da view', RebookingGateFilter::defaults()->toArray() === [
-    'diasJanela' => 10, 'clientes' => ['055763'], 'fornecedores' => ['AD'], 'produtos' => ['02'], 'formasNota' => ['B'], 'cadastros' => ['INTERFTMS'],
+    'diasJanela' => 10, 'clientes' => ['000001'], 'fornecedores' => ['XA'], 'produtos' => ['02'], 'formasNota' => ['B'], 'cadastros' => ['ORIGEM01'],
 ]);
 check('entrada padrão == defaults', RebookingGateFilter::fromInput($base)->toArray() === RebookingGateFilter::defaults()->toArray());
-$lista = RebookingGateFilter::fromInput(['clientes' => " 055763 ,ab;  ab\n cd"] + $base);
-check('lista: separadores, caixa alta e duplicados', $lista->clientes === ['055763', 'AB', 'CD']);
-check('lista como array', RebookingGateFilter::fromInput(['fornecedores' => ['ad', 'g3']] + $base)->fornecedores === ['AD', 'G3']);
+$lista = RebookingGateFilter::fromInput(['clientes' => " 000001 ,ab;  ab\n cd"] + $base);
+check('lista: separadores, caixa alta e duplicados', $lista->clientes === ['000001', 'AB', 'CD']);
+check('lista como array', RebookingGateFilter::fromInput(['fornecedores' => ['xa', 'g3']] + $base)->fornecedores === ['XA', 'G3']);
 check('dias: 1 e 180 aceitos', !rejeita(['diasJanela' => 1] + $base) && !rejeita(['diasJanela' => '180'] + $base));
 foreach ([0, 181, -5, 'abc', '', null, '10.5', '1e2', [10]] as $ruim) {
     check('dias inválido rejeitado: ' . json_encode($ruim), rejeita(['diasJanela' => $ruim] + $base));
 }
 check('lista vazia rejeitada', rejeita(['clientes' => '  '] + $base) && rejeita(['produtos' => []] + $base));
-foreach (["AD'; DROP TABLE x--", 'A D%', 'AD)', str_repeat('A', 21), 'AÇ'] as $ruim) {
+foreach (["XA'; DROP TABLE x--", 'A D%', 'XA)', str_repeat('A', 21), 'AÇ'] as $ruim) {
     check('código perigoso rejeitado: ' . substr($ruim, 0, 18), rejeita(['fornecedores' => $ruim] + $base));
 }
 check('mais de 20 códigos rejeitado', rejeita(['clientes' => implode(',', range(1, 21))] + $base));
@@ -62,7 +62,7 @@ $armazenado = RebookingGateFilter::fromStorage([
     RebookingGateFilter::KEY_DIAS => '999', RebookingGateFilter::KEY_CLIENTES => '', RebookingGateFilter::KEY_FORNECEDORES => 'G3',
 ]);
 check('armazenamento inválido volta ao padrão, válido é usado',
-    $armazenado->diasJanela === 10 && $armazenado->clientes === ['055763'] && $armazenado->fornecedores === ['G3']);
+    $armazenado->diasJanela === 10 && $armazenado->clientes === ['000001'] && $armazenado->fornecedores === ['G3']);
 check('toStorage/fromStorage ida e volta', RebookingGateFilter::fromStorage($lista->toStorage())->toArray() === $lista->toArray());
 
 echo "\n== Parte B: banco de TESTE ==\n";
@@ -96,7 +96,7 @@ if (!is_file($root . '/.env.test')) {
         }
     })());
 
-    $novo = RebookingGateFilter::fromInput(['diasJanela' => 30, 'fornecedores' => 'AD, G3'] + $base);
+    $novo = RebookingGateFilter::fromInput(['diasJanela' => 30, 'fornecedores' => 'XA, G3'] + $base);
     $mudancas = $repo->saveRebookingGateFilter($novo, 1);
     check('salvar: 2 chaves alteradas (dias e fornecedores)', count($mudancas) === 2, json_encode(array_column($mudancas, 'chave')));
     check('ler após salvar', $repo->rebookingGateFilter()->toArray() === $novo->toArray());
