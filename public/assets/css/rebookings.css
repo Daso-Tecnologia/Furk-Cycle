@@ -1,0 +1,260 @@
+/* Grid principal de Rebooking mais larga: exibe a coluna "Controle" sem
+   precisar de scroll horizontal na maioria das resoluções. */
+main.container {
+  max-width: 1680px;
+}
+
+.rb-table {
+  min-width: 1180px;
+}
+
+.grid-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.grid-actions-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.rb-table th, .rb-table td {
+  padding: 8px 9px;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.rb-furk-status {
+  font-weight: 600;
+  color: var(--fc-brand-dark);
+}
+
+.rb-cell-id {
+  font-family: Consolas, 'Courier New', monospace;
+  font-size: 11px;
+  color: var(--fc-muted);
+}
+
+.rb-cell-err {
+  color: var(--fc-danger);
+  max-width: 340px;
+}
+
+.col-check {
+  width: 34px;
+  text-align: center;
+}
+
+/* Verde = enviado/controlado; azul = ainda não enviado. */
+.rb-row-sent {
+  background: #e8f7ec;
+}
+
+.rb-row-sent td:first-child {
+  border-left: 4px solid #27ae60;
+}
+
+.rb-row-pending {
+  background: #eaf2fb;
+}
+
+.rb-row-pending td:first-child {
+  border-left: 4px solid #1d5a8f;
+}
+
+.rb-status-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+
+.rb-status-dot.sent {
+  background: #27ae60;
+}
+
+.rb-status-dot.pending {
+  background: #1d5a8f;
+}
+
+.rb-legend {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: -6px 0 16px;
+  font-size: 13px;
+  color: var(--fc-muted);
+}
+
+.rb-legend-item {
+  display: inline-flex;
+  align-items: center;
+}
+
+.rb-legend-item .rb-status-dot {
+  margin-right: 6px;
+}
+
+.rb-control-badge {
+  padding: 3px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.rb-control-badge.PENDING {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.rb-control-badge.SENT {
+  background: #cfe0ff;
+  color: #1d5a8f;
+}
+
+.rb-control-badge.ACCEPTED {
+  background: #d4edda;
+  color: #155724;
+}
+
+.rb-control-badge.REJECTED,
+.rb-control-badge.ERROR,
+.rb-control-badge.CANCELLED {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.rb-control-btn {
+  padding: 4px 9px;
+  font-size: 12px;
+  border: 1px solid #b8c2d0;
+  background: transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--fc-brand-dark);
+}
+
+.rb-control-btn:hover {
+  background: #edf3ff;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+
+.pagination button {
+  min-width: 36px;
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #fff;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.pagination button.active {
+  background: var(--fc-brand);
+  color: #fff;
+  border-color: var(--fc-brand);
+}
+
+.pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination .page-info {
+  margin: 0 8px;
+  font-size: 13px;
+  color: var(--fc-muted);
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 20, 40, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: var(--fc-surface);
+  border-radius: 12px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+  max-width: 1100px;
+  width: min(1100px, 94vw);
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  animation: fadeIn 0.2s ease;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--fc-line);
+}
+
+.modal-header h3 {
+  color: var(--fc-brand-dark);
+  font-size: 16px;
+}
+
+.modal-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.modal-close {
+  border: none;
+  background: transparent;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--fc-muted);
+}
+
+.modal-close:hover {
+  color: var(--fc-danger);
+}
+
+.modal-body {
+  padding: 16px 18px;
+  overflow: auto;
+}
+
+.modal-body .toolbar {
+  margin-bottom: 12px;
+}
+
+.control-table th, .control-table td {
+  padding: 8px 10px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+#rb-result .panel {
+  margin: 0;
+}

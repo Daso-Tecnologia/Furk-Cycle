@@ -1,0 +1,40 @@
+<?php
+
+declare(strict_types=1);
+
+use FurkiCycle\Auth\JwtGuard;
+use FurkiCycle\Config\Env;
+use FurkiCycle\Http\JsonResponse;
+use FurkiCycle\Rebooking\RebookingControlRepository;
+
+require dirname(__DIR__, 3) . '/vendor/autoload.php';
+
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    header('Allow: POST');
+    JsonResponse::send(['success' => false, 'message' => 'Método não permitido.'], 405);
+}
+
+try {
+    $env = new Env();
+    $claims = (new JwtGuard())->requireAuthenticatedUser($env);
+    (new JwtGuard())->requireRole($claims, ['ADMIN', 'SUPERVISOR']);
+
+    $body = json_decode(file_get_contents('php://input') ?: '{}', true, 512, JSON_THROW_ON_ERROR);
+    $page = max(1, (int) ($body['page'] ?? 1));
+    $size = max(1, min(200, (int) ($body['size'] ?? 50)));
+    $search = trim((string) ($body['search'] ?? ''));
+
+    $environment = $env->optional('FURK_ENVIRONMENT', 'production') ?? 'production';
+    $repository = new RebookingControlRepository($env);
+    $result = $repository->webhookEvents($environment, $page, $size, $search);
+
+    JsonResponse::send([
+        'success' => true,
+        'page' => $page,
+        'size' => $size,
+        'total' => (int) $result['total'],
+        'rows' => $result['rows'],
+    ]);
+} catch (\Throwable $error) {
+    JsonResponse::fromThrowable($error, 'Não foi possível listar os eventos do webhook.');
+}

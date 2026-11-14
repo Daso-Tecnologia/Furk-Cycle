@@ -1,0 +1,59 @@
+# Furki Cycle — Front controller + Proteção (public/)
+# public/ é o document root. A API (/api/*) e os estáticos são servidos normalmente.
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /furk-cycle/
+
+    # Preserva o header Authorization (JWT) através do rewrite (o Apache pode descartá-lo)
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Defesa em camadas: recusa caminhos com ".." (ou %2e / barra invertida) antes de
+    # chegar ao PHP. O index.php também valida o caminho de /api/*.
+    RewriteCond %{THE_REQUEST} "^[A-Z]+\s+[^\s?]*(\.\.|%2e|%5c)" [NC]
+    RewriteRule ^ - [F,L]
+
+    # Os arquivos estáticos são servidos diretamente.
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # A aplicação principal pode definir suas rotas no front controller.
+    RewriteRule ^ index.php [L]
+</IfModule>
+
+# Segurança: impedir acesso a arquivos sensíveis
+<FilesMatch "^(\.env|\.env\.example|composer\.json|composer\.lock|.*\.log)$">
+    Require all denied
+</FilesMatch>
+
+# Segurança: bloquear arquivos de teste/diagnóstico que podem expor credenciais
+<FilesMatch "^(test_|diagnostico_).*\.php$">
+    Require all denied
+</FilesMatch>
+
+# Segurança: bloquear arquivos que nunca devem ser servidos (SQL, scripts, pacotes, backups)
+<FilesMatch "\.(sql|md|ps1|zip|bak|ini|inc)$">
+    Require all denied
+</FilesMatch>
+
+# Segurança: cabeçalhos em TODAS as respostas (inclusive estáticos servidos direto pelo Apache)
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "DENY"
+    Header always set Referrer-Policy "same-origin"
+    Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+    Header always unset X-Powered-By
+</IfModule>
+
+# Impedir listagem de diretórios
+Options -Indexes
+
+# Bloquear arquivos ocultos (incluindo .env, .git, .htaccess)
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>
+
+# Páginas de erro personalizadas (sobrescreve a configuração global do Apache)
+ErrorDocument 403 /403.shtml
+ErrorDocument 404 /404.shtml

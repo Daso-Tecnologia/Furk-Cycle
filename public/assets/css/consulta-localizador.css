@@ -1,0 +1,68 @@
+/* Estilos exclusivos da tela de Consulta Localizador. */
+#lookup-form .app-notice { margin: 22px 0; }
+#lookup-form .btn-primary { margin-top: 2px; }
+#lookup-form .app-grid { margin-bottom: 18px; }
+
+#result {
+  margin-top: 16px;
+  padding: 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+#result.found {
+  border-left: 4px solid var(--fc-success);
+  background: #f0faf4;
+  color: #155724;
+}
+#result.not-found {
+  border-left: 4px solid var(--fc-danger);
+  background: #fef4f4;
+  color: #721c24;
+}
+#result.inconclusive {
+  border-left: 4px solid var(--fc-warning);
+  background: #fffaf0;
+  color: #7a5b10;
+}
+#result.error {
+  border-left: 4px solid var(--fc-danger);
+  background: #fef4f4;
+  color: #721c24;
+}
+
+.lookup-status {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+  font-weight: 600;
+}
+.lookup-status .badge { font-size: 13px; padding: 6px 14px; }
+.lookup-scanned { font-size: 12px; color: var(--fc-muted); margin-top: 8px; }
+
+.lookup-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+  font-size: 13px;
+}
+.lookup-table th, .lookup-table td {
+  padding: 9px 10px;
+  text-align: left;
+  border-bottom: 1px solid #e6eef6;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+.lookup-table th {
+  background: #f7f9fc;
+  color: var(--fc-brand-dark);
+  font-weight: 600;
+}
+.lookup-table tr:last-child td { border-bottom: none; }
+.lookup-table td.match {
+  background: #f0faf4;
+  color: #155724;
+  font-weight: bold;
+}
+.lookup-table .muted { margin: 0; }

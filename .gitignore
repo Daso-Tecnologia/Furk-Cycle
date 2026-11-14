@@ -1,0 +1,15 @@
+vendor/
+.env
+.env.*
+!.env.example
+!.env.test.example
+dump/
+storage/
+aws/
+env_em_aws/
+webhook/furk-webhook-config.php
+*.log
+*.bak
+*.zip
+*.phar
+*.csv

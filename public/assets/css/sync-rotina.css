@@ -1,0 +1,95 @@
+/* Estilos exclusivos da tela de Sincronização Consolidada Contínua Recursiva. */
+
+/* O estado pode ter nomes longos (ex.: STOP_REQUESTED). Mantém o texto
+   dentro do card, quebrando a palavra se necessário. */
+#cardEstado {
+  font-size: 18px;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+#config-form .app-notice,
+#control-hint { margin: 18px 0; }
+#config-form .app-grid { margin-bottom: 18px; }
+#config-form .app-field .app-hint {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--fc-muted);
+}
+#config-form .app-field input[readonly] {
+  background: #eef2f7;
+  color: #5a6473;
+  cursor: not-allowed;
+}
+#config-form .app-field select {
+  width: 100%;
+  padding: 9px;
+  border: 1px solid #b8c2d0;
+  border-radius: 7px;
+  color: var(--fc-ink);
+  background: #fff;
+  font-size: 14px;
+}
+
+.control-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.control-row .btn { min-width: 180px; }
+.btn-success {
+  background: #1d9d61;
+  color: #fff;
+  border: 0;
+}
+.btn-success:disabled { opacity: .6; }
+.btn-danger {
+  background: #c0392b;
+  color: #fff;
+  border: 0;
+}
+.btn-danger:disabled { opacity: .6; }
+
+#result {
+  margin-top: 16px;
+  padding: 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+#result.success {
+  border-left: 4px solid var(--fc-success);
+  background: #f0faf4;
+  color: #155724;
+}
+#result.error {
+  border-left: 4px solid var(--fc-danger);
+  background: #fef4f4;
+  color: #721c24;
+}
+
+#summaryDetail {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+#summaryDetail .summary-item {
+  padding: 12px;
+  background: #f7f9fc;
+  border-radius: 8px;
+  text-align: center;
+}
+#summaryDetail .summary-item .label {
+  font-size: 12px;
+  color: var(--fc-muted);
+  margin-bottom: 4px;
+}
+#summaryDetail .summary-item .value {
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--fc-brand-dark);
+}

@@ -1,0 +1,6 @@
+/* Ajustes específicos da tela de Sincronização Consolidada.
+   Reutiliza o shell (app.css). Apenas refinamentos locais. */
+
+#progress-body {
+  font-size: 14px;
+}
