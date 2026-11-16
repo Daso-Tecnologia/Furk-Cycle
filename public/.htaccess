@@ -43,6 +43,13 @@
     Header always set X-Frame-Options "DENY"
     Header always set Referrer-Policy "same-origin"
     Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+    # CSP (15/11/2026): só recursos do próprio site; scripts SEM 'unsafe-inline' (barra XSS injetado);
+    # estilos aceitam inline porque algumas telas usam style="..." (risco baixo).
+    # Para voltar atrás: apagar a linha abaixo (ou trocar o nome por Content-Security-Policy-Report-Only).
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
+    # HSTS (15/11/2026): começa com 1 dia (86400). Sem includeSubDomains de propósito (o domínio tem outros sistemas).
+    # Só aumentar (ex.: 31536000) depois de semanas sem problema no HTTPS/certificado.
+    Header always set Strict-Transport-Security "max-age=86400"
     Header always unset X-Powered-By
 </IfModule>
 

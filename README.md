@@ -414,7 +414,7 @@ O projeto traz **scripts de validação executáveis** em [`tools/`](tools/), se
 
 ## 16. Limitações conhecidas e próximos passos
 
-- O token JWT fica em `localStorage` no navegador; migrar para *cookie* `HttpOnly` e adicionar `Content-Security-Policy` reduziria o impacto de um eventual XSS.
+- O token JWT fica em `localStorage` no navegador. O `public/.htaccess` já define `Content-Security-Policy` (scripts somente do próprio site, sem `unsafe-inline`) e `Strict-Transport-Security`, o que reduz o impacto de um eventual XSS; migrar para *cookie* `HttpOnly` (com proteção CSRF) seria um próximo passo.
 - Não há suíte de testes automatizados em framework (PHPUnit); os scripts de `tools/` cobrem os cenários críticos.
 - Revogação de sessões e rotação de `JWT_SECRET` ainda não são automatizadas.
 - As telas **Configurações** e **Auditoria** estão em desenvolvimento.

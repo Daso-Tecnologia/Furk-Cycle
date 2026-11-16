@@ -17,7 +17,7 @@ Todos os segredos (banco, GATE, credenciais da Furk, `JWT_SECRET`, token do webh
 - **Erros**: `display_errors` apenas com `APP_DEBUG=true`.
 
 ## Recomendações para quem for implantar
-Servir somente por HTTPS (HSTS), adicionar `Content-Security-Policy`, considerar *cookie* `HttpOnly` no lugar de `localStorage` para o token, usar `JWT_SECRET` com no mínimo 32 caracteres, manter `.env` e a configuração do webhook fora da raiz web e rotacionar periodicamente credenciais e segredos.
+Servir somente por HTTPS (o HSTS e a `Content-Security-Policy` já vêm no `public/.htaccess`; aumente o `max-age` do HSTS depois de validar o ambiente), considerar *cookie* `HttpOnly` no lugar de `localStorage` para o token, usar `JWT_SECRET` com no mínimo 32 caracteres, manter `.env` e a configuração do webhook fora da raiz web e rotacionar periodicamente credenciais e segredos.
 
 ## Escopo da revisão
 A revisão desta vitrine foi **estática** (leitura de código e busca de segredos), feita com o Claude Sonnet 5.5. Não houve teste de invasão nem auditoria de dependências. Execute `composer audit` e um teste de segurança antes de qualquer exposição pública da aplicação real.
