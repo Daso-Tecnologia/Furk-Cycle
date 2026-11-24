@@ -41,6 +41,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Perfil sem permissão (só ADMIN gerencia usuários): esconde o item do menu. A API também recusa (403).
+    const perfil = usuarioAtual();
+    if (!perfil || perfil.role !== 'ADMIN') {
+        document.querySelectorAll('a[href="usuarios.html"]').forEach((link) => { link.hidden = true; });
+    }
+
     renderUserName();
     setupSessionCountdown();
     setupSessionRefresh();

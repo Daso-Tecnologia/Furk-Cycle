@@ -7,11 +7,13 @@ Todos os segredos (banco, GATE, credenciais da Furk, `JWT_SECRET`, token do webh
 
 ## Controles presentes no código
 - **JWT HS256** com algoritmo fixo, validação de `iss`, `exp` obrigatório e `sub`/`role` exigidos.
-- **Autorização por perfil de usuário** em todas as operações.
+- **Autorização por perfil de usuário** em todas as operações; somente o perfil ADMIN lista e gerencia usuários.
+- **Sessão revogável**: o `JwtGuard` reconfirma o usuário no banco (cache curto por usuário, `SESSION_RECHECK_SECONDS`, padrão 30 s); usuário desativado ou removido perde o acesso, e o perfil que vale é o atual, não o do token.
+- **Validação de tamanho** dos campos de usuário (resposta 4xx clara em vez de erro 500).
 - **Senhas** com `password_hash`/`password_verify`.
 - **Bloqueio de força bruta** por e-mail e por IP (`LoginThrottle`).
 - **SQL** com *prepared statements*; identificadores dinâmicos validados por regex.
-- **Webhook**: chamadas autenticadas e configuração fora do docroot.
+- **Webhook**: chamadas autenticadas e configuração fora do docroot; as respostas de erro não revelam o caminho do arquivo de configuração (ele vai só para o log do servidor).
 - **TLS**: verificação de certificado habilitada nos clientes HTTP (`VERIFYPEER=true`, `VERIFYHOST=2`).
 - **Cabeçalhos**: `X-Content-Type-Options`, `X-Frame-Options: DENY`, `Referrer-Policy`, `Permissions-Policy`; CORS desligado por padrão.
 - **Erros**: `display_errors` apenas com `APP_DEBUG=true`.

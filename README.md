@@ -303,10 +303,10 @@ A documentação detalhada é disponibilizada somente aos clientes, mediante sol
 
 | Grupo | Telas |
 |---|---|
-| **Operação** | Créditos elegíveis · Status Dinâmicos (Consulta localizador, Leitura, Rotina Contínua) · Reembolsos elegíveis · Sales (Leitura, Rotina Contínua) |
+| **Operação** | Créditos elegíveis · Status Dinâmicos (Consulta localizador — procura primeiro no banco local e só depois na Furk —, Leitura, Rotina Contínua) · Reembolsos elegíveis · Sales (Leitura, Rotina Contínua) |
 | **Sincronização** | Consolidada · Consolidada Contínua · Consolidada Contínua Recursiva |
 | **Rebooking e Webhook** | Grade do GATE com lupa e filtros, prévia, envio e exportação XLSX · Monitor do webhook |
-| **Administração** | Usuários · Configurações · Auditoria (em desenvolvimento) |
+| **Administração** | Usuários (somente perfil ADMIN) · Configurações · Auditoria (em desenvolvimento) |
 | **Ajuda** | Guia do usuário (`public/guia.html`) |
 
 ## 10. Regras de negócio
@@ -416,7 +416,7 @@ O projeto traz **scripts de validação executáveis** em [`tools/`](tools/), se
 
 - O token JWT fica em `localStorage` no navegador. O `public/.htaccess` já define `Content-Security-Policy` (scripts somente do próprio site, sem `unsafe-inline`) e `Strict-Transport-Security`, o que reduz o impacto de um eventual XSS; migrar para *cookie* `HttpOnly` (com proteção CSRF) seria um próximo passo.
 - Não há suíte de testes automatizados em framework (PHPUnit); os scripts de `tools/` cobrem os cenários críticos.
-- Revogação de sessões e rotação de `JWT_SECRET` ainda não são automatizadas.
+- Desativar um usuário derruba a sessão dele em até 30 s: o `JwtGuard` reconfirma o usuário no banco, com cache curto configurável (`SESSION_RECHECK_SECONDS`, opcional). A rotação de `JWT_SECRET` ainda não é automatizada.
 - As telas **Configurações** e **Auditoria** estão em desenvolvimento.
 - Executar `composer audit` e um teste de invasão antes de expor a aplicação real.
 

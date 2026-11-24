@@ -30,7 +30,7 @@ if (form) {
     }
 
     if (button) { button.disabled = true; button.textContent = 'Consultando…'; }
-    showResult('A consulta está em andamento. Dependendo do período, ela pode levar alguns minutos.', '');
+    showResult('Consultando o banco do Furk Cycle e, se necessário, a Furk. Aguarde…', '');
 
     try {
       const body = {
@@ -53,49 +53,88 @@ if (form) {
   });
 }
 
+function fmtDate(value) {
+  // 2025-10-01 ou 2025-10-01 08:30:00 / 2025-10-01T08:30:00 -> 01/10/2025 [08:30]
+  const m = String(value ?? '').match(/^(\d{4})-(\d{2})-(\d{2})(?:[ T](\d{2}):(\d{2}))?/);
+  if (!m) return value ? String(value) : '-';
+  return `${m[3]}/${m[2]}/${m[1]}${m[4] ? ` ${m[4]}:${m[5]}` : ''}`;
+}
+
+function renderSegments(segments) {
+  if (!Array.isArray(segments) || segments.length === 0) {
+    return '<p class="lookup-scanned">Este bilhete não tem trechos registrados.</p>';
+  }
+  const rows = segments.map((s) => `
+    <tr>
+      <td>${escapeHtml(s.order ?? '-')}</td>
+      <td>${escapeHtml(s.origin || '-')}</td>
+      <td>${escapeHtml(s.destination || '-')}</td>
+      <td>${escapeHtml(s.airline_code || '-')}</td>
+      <td>${escapeHtml(s.flight_number || '-')}</td>
+      <td>${escapeHtml(fmtDate(s.departure))}</td>
+      <td>${escapeHtml(fmtDate(s.arrival))}</td>
+      <td>${escapeHtml(s.flight_status || '-')}</td>
+      <td>${escapeHtml(s.fare_class || '-')}</td>
+    </tr>`).join('');
+  return `
+    <p class="lookup-scanned"><strong>Trechos do bilhete</strong></p>
+    <table class="lookup-table">
+      <thead><tr><th>Trecho</th><th>Origem</th><th>Destino</th><th>Cia.</th><th>Voo</th><th>Partida</th><th>Chegada</th><th>Status do voo</th><th>Classe</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+}
+
 function renderResult(resultData) {
   const status = resultData.status || '';
   const message = resultData.message || '';
   const matches = Array.isArray(resultData.matches) ? resultData.matches : [];
+  const fromLocal = resultData.source === 'BANCO_LOCAL';
+  const sourceLabel = fromLocal ? 'Banco local' : 'API da Furk';
 
   if (status === 'ENCONTRADO' && matches.length > 0) {
-    const rows = matches.map((match) => `
-      <tr>
-        <td>${escapeHtml(match.searched || '-')}</td>
-        <td class="match">${escapeHtml(match.matched || '-')}</td>
-        <td>${escapeHtml(match.airline_code || '-')}</td>
-        <td>${escapeHtml(match.locator_code || '-')}</td>
-        <td>${escapeHtml(match.ndc_order_id || '-')}</td>
-        <td>${escapeHtml(match.transaction_type || '-')}</td>
-        <td>${escapeHtml(match.issue_date || '-')}</td>
-        <td>${escapeHtml(match.status || '-')}</td>
-        <td>${escapeHtml(match.updated_at || '-')}</td>
-      </tr>
+    const blocks = matches.map((match) => `
+      <table class="lookup-table">
+        <thead>
+          <tr>
+            <th>Companhia</th>
+            <th>Bilhete</th>
+            <th>Localizador</th>
+            <th>Pedido NDC</th>
+            <th>Tipo</th>
+            <th>Emissão</th>
+            <th>Status</th>
+            <th>Atualizado em</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>${escapeHtml(match.airline_code || '-')}</td>
+            <td class="match">${escapeHtml(match.ticket_number || match.matched || '-')}</td>
+            <td>${escapeHtml(match.locator_code || '-')}</td>
+            <td>${escapeHtml(match.ndc_order_id || '-')}</td>
+            <td>${escapeHtml(match.transaction_type || '-')}</td>
+            <td>${escapeHtml(fmtDate(match.issue_date))}${match.in_period === false ? ' (fora do período informado)' : ''}</td>
+            <td>${escapeHtml(match.status || '-')}</td>
+            <td>${escapeHtml(fmtDate(match.updated_at))}</td>
+          </tr>
+        </tbody>
+      </table>
+      ${renderSegments(match.segments)}
     `).join('');
+
+    const footer = fromLocal
+      ? `<p class="lookup-scanned">Fonte: banco local do Furk Cycle (dados já importados da Furk). ${matches.length} registro(s) para este localizador.</p>`
+      : `<p class="lookup-scanned">Fonte: API da Furk · ${resultData.total_elements ?? 0} registro(s) no período · ${resultData.records_scanned ?? 0} examinados · ${resultData.total_pages ?? 0} página(s).</p>`;
 
     const html = `
       <div class="fade-in">
         <div class="lookup-status">
           <span class="badge badge-success">ENCONTRADO</span>
+          <span class="badge badge-warning">${escapeHtml(sourceLabel)}</span>
           <span>${escapeHtml(message)}</span>
         </div>
-        <table class="lookup-table">
-          <thead>
-            <tr>
-              <th>Chave pesquisada</th>
-              <th>Chave encontrada (match)</th>
-              <th>Companhia</th>
-              <th>Locator</th>
-              <th>NDC Order</th>
-              <th>Trans.</th>
-              <th>Emissão</th>
-              <th>Status</th>
-              <th>Atualizado</th>
-            </tr>
-          </thead>
-          <tbody>${rows}</tbody>
-        </table>
-        <p class="lookup-scanned">${resultData.total_elements ?? 0} registro(s) no período · ${resultData.records_scanned ?? 0} examinados · ${resultData.total_pages ?? 0} página(s).</p>
+        ${blocks}
+        ${footer}
       </div>
     `;
     showResult(html, 'found', true);
@@ -112,7 +151,7 @@ function renderResult(resultData) {
       <span class="badge ${config[0]}">${escapeHtml(status.replace('_', ' '))}</span>
       <span>${escapeHtml(message)}</span>
     </div>
-    <p class="lookup-scanned">${resultData.total_elements ?? 0} registro(s) no período · ${resultData.records_scanned ?? 0} examinados · ${resultData.total_pages ?? 0} página(s).</p>
+    <p class="lookup-scanned">Fonte da consulta: ${escapeHtml(sourceLabel)} · ${resultData.total_elements ?? 0} registro(s) no período · ${resultData.records_scanned ?? 0} examinados · ${resultData.total_pages ?? 0} página(s).</p>
   `;
   showResult(html, config[1], true);
 }

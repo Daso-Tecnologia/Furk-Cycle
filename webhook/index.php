@@ -28,11 +28,11 @@ function load_config(): array
 {
     $path = 'CAMINHO_SEGURO_FORA_DO_WEBROOT/furk-webhook-config.php';
     if (!is_file($path)) {
+        error_log('furk-webhook: arquivo de configuração não encontrado em ' . $path);
         respond([
             'success' => false,
             'stage' => 'configuration',
             'message' => 'Arquivo de configuração não encontrado.',
-            'expected_path' => $path,
         ], 500);
     }
 

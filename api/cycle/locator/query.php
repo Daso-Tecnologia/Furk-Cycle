@@ -7,6 +7,7 @@ use FurkiCycle\Config\Env;
 use FurkiCycle\Furk\DynamicStatusClient;
 use FurkiCycle\Furk\OAuthClient;
 use FurkiCycle\Http\JsonResponse;
+use FurkiCycle\Locator\LocalLocatorRepository;
 use FurkiCycle\Locator\LocatorLookupService;
 
 require dirname(__DIR__, 3) . '/vendor/autoload.php';
@@ -40,7 +41,8 @@ try {
     $scope = $env->required('FURK_DYNAMIC_STATUS_SCOPE');
     $oauth = new OAuthClient($env, $scope);
     $client = new DynamicStatusClient($env, $oauth);
-    $service = new LocatorLookupService($env, $client);
+    // Banco local primeiro (dados já importados); a API da Furk só é consultada se o localizador não estiver nele.
+    $service = new LocatorLookupService($env, $client, new LocalLocatorRepository($env));
     $result = $service->lookup($initialIssueDate, $finalIssueDate, $locator);
 
     JsonResponse::send(['success' => true, 'result' => $result]);

@@ -17,7 +17,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 try {
     $env = new Env();
     $claims = (new JwtGuard())->requireAuthenticatedUser($env);
-    (new JwtGuard())->requireRole($claims, ['ADMIN', 'SUPERVISOR']);
+    // Decisão do responsável (24/11/2026): só ADMIN lista usuários (nome, e-mail, perfil, último login).
+    (new JwtGuard())->requireRole($claims, ['ADMIN']);
 
     $repository = new UserRepository($env);
     $users = $repository->all();

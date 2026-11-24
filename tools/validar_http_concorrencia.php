@@ -168,8 +168,10 @@ try {
     check('Webhook (eventos) LIVRE com a Recursiva ativa → 200', $status === 200, "HTTP {$status}");
     [$status] = http('POST', $base . '/api/cycle/rebooking/control.php', $super, []);
     check('Rebooking (grid de controle) LIVRE com a Recursiva ativa → 200', $status === 200, "HTTP {$status}");
+    [$status] = http('POST', $base . '/api/admin/users/list.php', $admin, []);
+    check('Usuários (listar, ADMIN) LIVRE → 200', $status === 200, "HTTP {$status}");
     [$status] = http('POST', $base . '/api/admin/users/list.php', $super, []);
-    check('Usuários (listar) LIVRE → 200', $status === 200, "HTTP {$status}");
+    check('Usuários (listar, SUPERVISOR) → 403 (decisão de 24/11/2026: só ADMIN lista usuários)', $status === 403, "HTTP {$status}");
 
     // interromper / ver status das rotinas NÃO são bloqueados
     [$status] = http('GET', $base . '/api/cycle/dynamic-status/job.php', $admin);

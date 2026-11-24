@@ -57,7 +57,7 @@
     <div class="page-header">
       <h1>Consulta Localizador</h1>
     </div>
-    <p class="muted">Verifique se um localizador existe na base da Furk dentro do período informado.</p>
+    <p class="muted">Verifique se um localizador existe: primeiro no banco do Furk Cycle (dados já importados da Furk) e, se não estiver lá, na Furk.</p>
 
     <section class="panel">
       <h3>Consulta Furk — Localizador</h3>
@@ -80,7 +80,7 @@
           </div>
         </div>
 
-        <p class="app-notice">A consulta verifica o localizador nos dados da Furk no intervalo informado. Somente leitura: não emite, não cancela e não altera bilhetes.</p>
+        <p class="app-notice">A consulta procura primeiro no banco do Furk Cycle (todo o período já importado, mesmo fora das datas acima) e só depois na Furk, no intervalo informado. Somente leitura: não emite, não cancela e não altera bilhetes.</p>
         <button class="btn btn-primary" id="lookup-button" type="submit">Consultar</button>
       </form>
     </section>
@@ -89,9 +89,9 @@
   </main>
 
   <script src="assets/js/api.js?v=20261103b"></script>
-  <script src="assets/js/main.js?v=20261103b"></script>
+  <script src="assets/js/main.js?v=20261124a"></script>
   <script src="assets/js/app.js?v=20261103b"></script>
   <script src="assets/js/date-field.js?v=20261103b"></script>
-  <script src="assets/js/consulta-localizador.js?v=20261103b"></script>
+  <script src="assets/js/consulta-localizador.js?v=20261117a"></script>
 </body>
 </html>

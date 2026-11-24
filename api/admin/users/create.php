@@ -38,6 +38,16 @@ try {
     if (strlen($password) < 8) {
         throw new RuntimeException('A senha deve ter pelo menos 8 caracteres.');
     }
+    // Limites das colunas de `users` (name varchar(120), email varchar(190)): erro 4xx claro em vez de 500/corte silencioso.
+    if (mb_strlen($name) > 120) {
+        throw new RuntimeException('O nome aceita no máximo 120 caracteres.');
+    }
+    if (strlen($email) > 190) {
+        throw new RuntimeException('O e-mail aceita no máximo 190 caracteres.');
+    }
+    if (strlen($password) > 128) {
+        throw new RuntimeException('A senha aceita no máximo 128 caracteres.');
+    }
 
     $repository = new UserRepository($env);
     $repository->assertEmailUnique($email);

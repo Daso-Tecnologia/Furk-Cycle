@@ -33,6 +33,9 @@ try {
     if (strlen($password) < 8) {
         throw new RuntimeException('A nova senha deve ter pelo menos 8 caracteres.');
     }
+    if (strlen($password) > 128) {
+        throw new RuntimeException('A senha aceita no máximo 128 caracteres.');
+    }
 
     $repository = new UserRepository($env);
     $existing = $repository->findById($id);

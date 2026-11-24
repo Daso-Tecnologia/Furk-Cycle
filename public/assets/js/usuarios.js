@@ -5,6 +5,15 @@
   const userError = document.getElementById('userError');
   const passwordError = document.getElementById('passwordError');
 
+  // Somente ADMIN gerencia usuários (a API também recusa os demais perfis com 403).
+  let currentUser = null;
+  try { currentUser = JSON.parse(localStorage.getItem('furki_cycle_usuario') || 'null'); } catch { /* sem usuário */ }
+  if (!currentUser || currentUser.role !== 'ADMIN') {
+    tableBody.innerHTML = '<tr><td colspan="5" class="error-msg">Somente administradores podem ver e gerenciar usuários.</td></tr>';
+    document.querySelectorAll('[data-action="new-user"], [data-action="refresh"]').forEach((b) => { b.hidden = true; });
+    return;
+  }
+
   let editingId = null;
   let passwordUserId = null;
 

@@ -39,6 +39,13 @@ try {
     if ($email === '' || filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
         throw new RuntimeException('Informe um e-mail válido.');
     }
+    // Limites das colunas de `users` (name varchar(120), email varchar(190)): erro 4xx claro em vez de 500/corte silencioso.
+    if (mb_strlen($name) > 120) {
+        throw new RuntimeException('O nome aceita no máximo 120 caracteres.');
+    }
+    if (strlen($email) > 190) {
+        throw new RuntimeException('O e-mail aceita no máximo 190 caracteres.');
+    }
 
     $repository = new UserRepository($env);
     $existing = $repository->findById($id);

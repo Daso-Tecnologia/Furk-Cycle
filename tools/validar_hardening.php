@@ -61,7 +61,8 @@ unlink($tmp);
 
 // ---------- JwtGuard ----------
 $secret = 'segredo-de-teste-com-mais-de-32-caracteres-ok';
-$guard = new JwtGuard();
+// Consulta de perfil simulada (offline): usuário '1' ativo ADMIN, '2' ativo SUPERVISOR, qualquer outro = desativado/removido.
+$guard = new JwtGuard(static fn (string $id): ?string => match ($id) { '1' => 'ADMIN', '2' => 'SUPERVISOR', default => null });
 $try = function (?string $header) use ($guard, $env): string {
     unset($_SERVER['HTTP_AUTHORIZATION'], $_SERVER['REDIRECT_HTTP_AUTHORIZATION']);
     if ($header !== null) {
@@ -88,6 +89,12 @@ check('token sem exp -> 401', str_starts_with($try('Bearer ' . JWT::encode($clai
 $b64 = static fn (string $s): string => rtrim(strtr(base64_encode($s), '+/', '-_'), '=');
 $none = $b64('{"alg":"none","typ":"JWT"}') . '.' . $b64('{"sub":"1","role":"ADMIN","iss":"test-issuer","exp":' . ($now + 600) . '}') . '.';
 check('alg=none rejeitado', str_starts_with($try('Bearer ' . $none), 'auth:'));
+// Revogação: usuário desativado/removido perde o acesso mesmo com token válido; o perfil do banco prevalece.
+check('usuario desativado/removido com token valido -> 401 (sessao encerrada)', str_starts_with($try('Bearer ' . JWT::encode(['sub' => '99'] + $claims + ['exp' => $now + 600], $secret, 'HS256')), 'auth:Sessão encerrada'));
+unset($_SERVER['HTTP_AUTHORIZATION']);
+$_SERVER['HTTP_AUTHORIZATION'] = 'Bearer ' . JWT::encode(['sub' => '2', 'role' => 'ADMIN', 'iss' => 'test-issuer', 'exp' => $now + 600], $secret, 'HS256');
+check('perfil do banco prevalece sobre o do token (token diz ADMIN, banco diz SUPERVISOR)', $guard->requireAuthenticatedUser($env)['role'] === 'SUPERVISOR');
+unset($_SERVER['HTTP_AUTHORIZATION']);
 try {
     $guard->requireRole(['role' => 'SUPERVISOR'], ['ADMIN']);
     check('perfil sem permissao -> AuthorizationException', false);
