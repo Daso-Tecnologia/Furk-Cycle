@@ -104,11 +104,16 @@
               <option value="3">3</option>
               <option value="4">4</option>
               <option value="5" selected>5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
             </select>
-            <small class="app-hint">Tamanho da janela (1 a 5 dias).</small>
+            <small class="app-hint">Tamanho da janela (1 a 10 dias).</small>
           </div>
         </div>
-        <p class="app-notice">A rotina lê a janela <strong>[hoje − recuo, hoje − 1]</strong> (sempre terminando em <strong>D-1</strong>). A Furk está em D-1: o dia de hoje (D-0) nunca é lido. O recuo vai de 1 a 5 dias. Em cada ciclo, as tabelas <strong>Sales</strong>, <strong>Créditos Elegíveis</strong>, <strong>Reembolsos Elegíveis</strong> e <strong>Status Dinâmicos</strong> são importadas e a <strong>bi_insight</strong> é atualizada automaticamente. A data base fixa a referência do primeiro disparo; a janela desliza sozinha a cada ciclo.</p>
+        <p class="app-notice">A rotina lê a janela <strong>[hoje − recuo, hoje − 1]</strong> (sempre terminando em <strong>D-1</strong>). A Furk está em D-1: o dia de hoje (D-0) nunca é lido. O recuo vai de 1 a 10 dias; quanto maior, mais demorado o ciclo (cada dia de janela soma cerca de 20 segundos). Em cada ciclo, as tabelas <strong>Sales</strong>, <strong>Créditos Elegíveis</strong>, <strong>Reembolsos Elegíveis</strong> e <strong>Status Dinâmicos</strong> são importadas e a <strong>bi_insight</strong> é atualizada automaticamente. A data base fixa a referência do primeiro disparo; a janela desliza sozinha a cada ciclo.</p>
         <button class="btn btn-primary" id="save-button" type="submit">Salvar configuração</button>
       </form>
     </section>

@@ -5,7 +5,7 @@
 -- Regras de negócio (16/10/2026):
 --   * data_base       = sempre a DATA ATUAL (primeiro disparo); vedada a alteração.
 --   * frequencia_horas= 1 a 5 horas (o worker converte para minutos na pausa).
---   * dias_recuo      = 1 a 5 dias (janela: [hoje - recuo, hoje - 1], sempre em D-1).
+--   * dias_recuo      = 1 a 10 dias (janela: [hoje - recuo, hoje - 1], sempre em D-1).
 
 CREATE TABLE IF NOT EXISTS furk_sync_rotina (
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,

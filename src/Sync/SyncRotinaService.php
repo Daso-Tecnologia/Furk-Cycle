@@ -34,11 +34,11 @@ use RuntimeException;
  *   - data_base é SEMPRE a data atual (vedada a alteração) — apenas referência
  *     do primeiro disparo; a janela é recalculada a cada ciclo usando "hoje".
  *   - A frequência é em HORAS (1 a 5), convertida para minutos na pausa.
- *   - dias_recuo (1 a 5) define o tamanho da janela: [hoje - recuo, hoje - 1].
+ *   - dias_recuo (1 a 10) define o tamanho da janela: [hoje - recuo, hoje - 1].
  */
 final class SyncRotinaService
 {
-    private const MAX_RECUO = 5;
+    private const MAX_RECUO = 10;
     private const MIN_FREQUENCIA_HORAS = 1;
     private const MAX_FREQUENCIA_HORAS = 5;
 
@@ -280,7 +280,7 @@ final class SyncRotinaService
 
     /**
      * Janela deslizante: sempre termina em D-1 (a Furk não contempla o dia
-     * corrente) e tem o tamanho definido por `dias_recuo` (1 a 5 dias).
+     * corrente) e tem o tamanho definido por `dias_recuo` (1 a 10 dias).
      *
      * @return array{0: string, 1: string}
      */
